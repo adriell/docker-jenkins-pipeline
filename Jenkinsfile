@@ -9,7 +9,7 @@ node {
 
   stage('Test') {
     dir('webapp') {
-      sh 'mvn -f webapp/pom.xml exec:java -DskipTests'
+      sh 'mvn -f pom.xml exec:java -DskipTests'
       sh 'mvn -f pom.xml test'
     }
   }
