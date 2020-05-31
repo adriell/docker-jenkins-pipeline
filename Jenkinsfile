@@ -1,9 +1,21 @@
 node {
   checkout scm
   env.PATH = "${tool 'Maven3'}/bin:${env.PATH}"
-  stage('Package') {
+  stage('Build') {
     dir('webapp') {
       sh 'mvn clean package -DskipTests'
+    }
+  }
+
+  stage('Test') {
+    dir('webapp') {
+      sh 'mvn -f pom.xml test'
+    }
+  }
+
+  stage('Sonar'){
+    dir('webapp'){
+      sh 'mvn verify sonar:sonar'
     }
   }
 
@@ -16,7 +28,7 @@ node {
   stage ('Run Application') {
     try {
       // Start database container here
-      // sh 'docker run -d --name db -p 8091-8093:8091-8093 -p 11210:11210 arungupta/oreilly-couchbase:latest'
+      sh 'docker run -d --name db -p 8091-8093:8091-8093 -p 11210:11210 arungupta/oreilly-couchbase:latest'
 
       // Run application using Docker image
       sh "DB=`docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' db`"
