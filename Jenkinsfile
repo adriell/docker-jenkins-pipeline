@@ -9,7 +9,6 @@ node {
 
   stage('Test') {
     dir('webapp') {
-      sh 'docker run -d --name db -p 8091-8093:8091-8093 -p 11210:11210 arungupta/oreilly-couchbase:latest'
       sh 'mvn -f pom.xml exec:java -DskipTests'
       sh 'mvn -f pom.xml test'
     }
